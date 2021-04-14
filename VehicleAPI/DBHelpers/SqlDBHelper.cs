@@ -43,6 +43,23 @@ namespace VehicleAPI.DBHelpers
         }
 
         /// <summary>
+        /// return matching items in the database.
+        /// </summary>
+        /// <typeparam name="T">data model</typeparam>
+        /// <typeparam name="U">parameter model</typeparam>
+        /// <param name="storedProcesdure"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public List<T> LoadData<T, U>(string storedProcesdure, U parameters)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return connection.Query<T>(storedProcesdure, parameters,
+                    commandType: CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        /// <summary>
         /// return sinlgle item in the database.
         /// </summary>
         /// <typeparam name="T">type of data model</typeparam>
@@ -86,10 +103,22 @@ namespace VehicleAPI.DBHelpers
             }
         }
 
-       
-
-
-
+        /// <summary>
+        /// return applied items count in the database.
+        /// </summary>
+        /// <typeparam name="T">data model</typeparam>
+        /// <typeparam name="U">parameter model</typeparam>
+        /// <param name="storedProcesdure">stored Procedure</param>
+        /// <param name="parameters">parameters</param>
+        /// <returns></returns>
+        public int SaveData<T, U>(string storedProcesdure, U parameters)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return connection.Execute(storedProcesdure, parameters,
+                    commandType: CommandType.StoredProcedure);
+            }
+        }
 
     }
 }
