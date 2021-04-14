@@ -38,18 +38,18 @@ namespace VehicleAPI.Controllers
 
         /// <summary>
         /// return Retrieve the positions of a vehicle during a certain time.
-        /// https://localhost:44309/api/track/range?id=dcbdf109-c334-4112-a94b-17bfece248b4&startTime=2021-04-13 T17:00:00.000&endTime=2021-04-15 T17:41:18.813
+        /// https://localhost:44309/api/track/range/
         /// </summary>
         /// <param name="id">Vehicle Seq ID</param>
         /// <param name="startTime">2014-04-14 00:00:00.000 or 2021-04-13 T00:00:00.000</param>
         /// <param name="endTime">2014-04-14 00:00:00.000 or 2021-04-13 T00:00:00.000</param>
         /// <returns>JSON</returns>
-        [HttpGet]
+        [HttpPost]
         [Route("api/track/range/")]
-        public List<VehicleTrackViewModel> TrackRange(string id, DateTime startTime, DateTime endTime)
+        public List<VehicleTrackViewModel> TrackRange(TrackRangeModel trackRange)
         {
-            return TrackProcessor.GetTracksByVehicleSeqID(id)
-                .Where(curr => curr.CreatedDate >= startTime && curr.CreatedDate <= endTime)
+            return TrackProcessor.GetTracksByVehicleSeqID(trackRange.Id)
+                .Where(curr => curr.CreatedDate >= trackRange.StartTime && curr.CreatedDate <= trackRange.EndTime)
                 .ToList();
         }
 

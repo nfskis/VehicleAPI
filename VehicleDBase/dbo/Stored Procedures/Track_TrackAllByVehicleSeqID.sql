@@ -5,6 +5,7 @@ BEGIN
 		SELECT 
 				Vehicles.VehicleSeqID as VehicleSeqID,
 				Vehicles.PlateNumber as PlateNumber,
+				Tracks.TrackSeqID as TrackSeqID,
 				Tracks.Latitude as Latitude,
 				Tracks.Longitude as Longitude,   
 				Tracks.CreatedDate as CreatedDate

@@ -77,7 +77,14 @@ namespace VehicleAPI.BusinessLogic
             #endregion
 
             value.TrackSeqID = Guid.NewGuid().ToString();
-            return SqlDataAccess.SaveData<TrackModel, dynamic>("dbo.Track_RegisterTrack", value);
+            return SqlDataAccess.SaveData<TrackModel, dynamic>("dbo.Track_RegisterTrack",
+                                                                new
+                                                                {
+                                                                    value.TrackSeqID,
+                                                                    value.VehicleSeqID,
+                                                                    value.Latitude,
+                                                                    value.Longitude
+                                                                });
         }
 
     }
