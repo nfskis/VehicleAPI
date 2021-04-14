@@ -12,6 +12,7 @@ namespace VehicleAPI.BusinessLogic
     {
         private SqlDataAccess SqlDataAccess;
 
+
         public SetDefaultProcessor(IConfiguration config)
         {
             SqlDataAccess = new SqlDataAccess(config);
@@ -19,7 +20,13 @@ namespace VehicleAPI.BusinessLogic
 
         public void ClearTables()
         {
-            string query = @"DELETE FROM UserRoles";
+            string query = @"DELETE FROM Users";
+            SqlDataAccess.SingleOrDefault(query);
+
+            query = @"DELETE FROM Vehicles";
+            SqlDataAccess.SingleOrDefault(query);
+
+            query = @"DELETE FROM UserRoles";
             SqlDataAccess.SingleOrDefault(query);
         }
 
@@ -28,10 +35,64 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="value">User model</param>
         /// <returns>applied row count</returns>
-        public int SetDefaults()
+        public void SetDefaults()
         {
             ClearTables();
 
+            AddUserRoles();
+
+            AddUsers();
+
+            AddVechiles();
+
+        }
+
+        private void AddUsers()
+        {
+            var users = new List<UserModel>()
+            {
+                new UserModel(){ RoleID = 1, Email="insung.kim@gmail.com", FirstName="Insung", LastName="Kim", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="Joon@gmail.com", FirstName="Joon", LastName="Smith", Password="Smith", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="mao@gmail.com", FirstName="mao", LastName="lee", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="Jamin.kim@gmail.com", FirstName="Jamin", LastName="Kim", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="dongMin.kim@gmail.com", FirstName="dongMin", LastName="Kim", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 2, Email="Keblish@gmail.com", FirstName="Joe", LastName="Keblish", Password="insung", UserSeqID=Guid.NewGuid().ToString()}
+            };
+
+            string query = @"INSERT INTO Users(UserSeqID, FirstName, lastName, email, password, RoleID)
+                        VALUES(@UserSeqID, @FirstName, @lastName, @email, @password, @RoleID)";
+
+            foreach (var curr in users)
+            {
+                SqlDataAccess.SaveData(query, curr);
+            }
+        }
+
+        private void AddVechiles()
+        {
+
+            string query = @"INSERT INTO Vehicles(VehicleSeqID, PlateNumber, Brand, Model)
+                        VALUES(@VehicleSeqID, @PlateNumber, @Brand, @Model)";
+
+
+            for (int i = 0; i < 10000; i++)
+            {
+                var vehicle = new VehicleModel()
+                {
+                    VehicleSeqID = Guid.NewGuid().ToString(),
+                    Brand = i % 2 == 0 ? "Honda" : "Toyota",
+                    Model = i % 2 == 0 ? "Camry" : "Sienna",
+                    PlateNumber = $"{new Random(i).Next(99).ToString()}{new Random(i).Next(99)}",
+                    CreatedDate = DateTime.Now,
+                    LastModifiedDate = DateTime.Now
+
+                };
+                SqlDataAccess.SaveData(query, vehicle);
+            }
+        }
+
+        private int AddUserRoles()
+        {
             // set default RoleModels.
             int result = 0;
             var userRoles = new List<UserRoleModel>() {
@@ -47,9 +108,8 @@ namespace VehicleAPI.BusinessLogic
             {
                 result += SqlDataAccess.SaveData(query, curr);
             }
+
             return result;
         }
-
-
     }
 }

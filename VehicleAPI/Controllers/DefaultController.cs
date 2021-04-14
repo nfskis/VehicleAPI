@@ -13,25 +13,37 @@ namespace VehicleAPI.Controllers
     [ApiController]
     public class DefaultController : Controller
     {
-        private SetDefaultProcessor SetDefaultProcessor;
+        private readonly SetDefaultProcessor SetDefaultProcessor;
+        private readonly TrackProcessor TrackProcessor;
 
         public DefaultController(IConfiguration config)
         {
             SetDefaultProcessor = new SetDefaultProcessor(config);
+            TrackProcessor = new TrackProcessor(config);
         }
 
         /// <summary>
         /// Register Vehicle
-        /// https://localhost:44309/api/vehicle/register/
         /// </summary>
         /// <param name="value">VehicleModel</param>
         [Route("api/Vehicle/Default/")]
         [HttpPost]
-        public int SetDefaultRoles()
+        public void SetDefaultRoles()
         {
-            return SetDefaultProcessor.SetDefaults();
+            SetDefaultProcessor.SetDefaults();
         }
 
+        /// <summary>
+        /// Register Vehicle
+        /// </summary>
+        /// <param name="value">VehicleModel</param>
+        [Route("api/Vehicle/trackRecordStart/")]
+        [HttpPost]
+        public void recordTrack()
+        {
+            var track = new TrackModel() { };
+            TrackProcessor.RegisterTrack(track, "");
+        }
 
     }
 }
