@@ -8,11 +8,13 @@ namespace VehicleAPI.BusinessLogic
 {
     public class TrackProcessor
     {
-        private SqlDataAccess SqlDataAccess;
+        private readonly SqlDataAccess SqlDataAccess;
+        private readonly VehicleProcessor VehicleProcessor;
 
         public TrackProcessor(IConfiguration config)
         {
             SqlDataAccess = new SqlDataAccess(config);
+            VehicleProcessor = new VehicleProcessor(config);
         }
 
         /// <summary>
@@ -22,17 +24,7 @@ namespace VehicleAPI.BusinessLogic
         /// <returns></returns>
         public List<VehicleTrackViewModel> GetTracksByVehicleSeqID(string vehicleSeqID)
         {
-            string query = $@"SELECT 
-                                Vehicles.VehicleSeqID as VehicleSeqID,
-                                Vehicles.PlateNumber as PlateNumber,
-                                Tracks.Latitude as Latitude,
-                                Tracks.Longitude as Longitude,   
-                                Tracks.CreatedDate as CreatedDate
-                            FROM Vehicles
-                            INNER JOIN Tracks ON Tracks.VehicleSeqID = Vehicles.VehicleSeqID
-                            WHERE Vehicles.VehicleSeqID = '{vehicleSeqID}'
-                            ORDER BY CreatedDate DESC";
-            return SqlDataAccess.LoadData<VehicleTrackViewModel>(query);
+            return SqlDataAccess.LoadData<VehicleTrackViewModel, dynamic>("dbo.Track_TrackAllByVehicleSeqID", new { vehicleSeqID });
         }
 
         /// <summary>
@@ -42,18 +34,7 @@ namespace VehicleAPI.BusinessLogic
         /// <returns></returns>
         public VehicleTrackViewModel GetCurrentLocationByVehicleSeqID(string vehicleSeqID)
         {
-            string query = $@"SELECT TOP 1
-                                Vehicles.VehicleSeqID as VehicleSeqID,
-                                Vehicles.PlateNumber as PlateNumber,
-                                Tracks.TrackSeqID as TrackSeqID,
-                                Tracks.Latitude as Latitude,
-                                Tracks.Longitude as Longitude,   
-                                Tracks.CreatedDate as CreatedDate
-                            FROM Vehicles
-                            INNER JOIN Tracks ON Tracks.VehicleSeqID = Vehicles.VehicleSeqID
-                            WHERE Vehicles.VehicleSeqID = '{vehicleSeqID}'
-                            ORDER BY Tracks.CreatedDate DESC";
-            return SqlDataAccess.SingleOrDefault<VehicleTrackViewModel>(query);
+            return SqlDataAccess.LoadSingleData<VehicleTrackViewModel, dynamic>("dbo.Track_GetCurrentLocation", new { vehicleSeqID });
         }
 
         /// <summary>
@@ -63,10 +44,7 @@ namespace VehicleAPI.BusinessLogic
         /// <returns></returns>
         public int UpdateTrack(TrackModel track)
         {
-            string query = $@"UPDATE Tracks
-                              SET Latitude = @Latitude, Longitude = @Longitude, CreatedDate = @CreatedDate
-                              WHERE TrackSeqID = '{track.TrackSeqID}' ";
-            return SqlDataAccess.SaveData(query, track);
+            return SqlDataAccess.SaveData<TrackModel, dynamic>("dbo.Track_UpdateTrack", new { track.TrackSeqID, track.Latitude, track.Longitude, track.CreatedDate });
         }
 
         /// <summary>
@@ -76,11 +54,8 @@ namespace VehicleAPI.BusinessLogic
         /// <returns></returns>
         public int RegisterTrack(TrackModel value, string vehicleID)
         {
-            // Check Vehicle ID
-            string query = $@"SELECT VehicleSeqID 
-                              FROM Vehicles 
-                              WHERE VehicleSeqID = '{vehicleID}'";
-            bool isExisted = SqlDataAccess.SingleOrDefault<VehicleModel>(query) != null ? true : false;
+            // Check to eixted Vehicle ID
+            bool isExisted = VehicleProcessor.FindVehicleByVehicleID(vehicleID) != null ? true : false;
             if (!isExisted)
             {
                 throw new Exception($"the givens VehicleID is not existed in DataBase: '{vehicleID}'");
@@ -101,13 +76,8 @@ namespace VehicleAPI.BusinessLogic
             }
             #endregion
 
-            if (string.IsNullOrWhiteSpace(value.TrackSeqID))
-                value.TrackSeqID = Guid.NewGuid().ToString();
-
-            query = @"  INSERT INTO Tracks(TrackSeqID, VehicleSeqID, Latitude, Longitude)
-                        VALUES(@TrackSeqID, @VehicleSeqID, @Latitude, @Longitude)";
-
-            return SqlDataAccess.SaveData(query, value);
+            value.TrackSeqID = Guid.NewGuid().ToString();
+            return SqlDataAccess.SaveData<TrackModel, dynamic>("dbo.Track_RegisterTrack", value);
         }
 
     }

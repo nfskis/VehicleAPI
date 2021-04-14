@@ -47,8 +47,8 @@ namespace VehicleAPI.DBHelpers
         /// </summary>
         /// <typeparam name="T">data model</typeparam>
         /// <typeparam name="U">parameter model</typeparam>
-        /// <param name="storedProcesdure"></param>
-        /// <param name="parameters"></param>
+        /// <param name="storedProcesdure">stored Procesdure</param>
+        /// <param name="parameters">parameters model</param>
         /// <returns></returns>
         public List<T> LoadData<T, U>(string storedProcesdure, U parameters)
         {
@@ -56,6 +56,23 @@ namespace VehicleAPI.DBHelpers
             {
                 return connection.Query<T>(storedProcesdure, parameters,
                     commandType: CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        /// <summary>
+        /// return matching single items in the database.
+        /// </summary>
+        /// <typeparam name="T">data model</typeparam>
+        /// <typeparam name="U">parameter model</typeparam>
+        /// <param name="storedProcesdure">stored Procesdure</param>
+        /// <param name="parameters">parameters model</par
+        /// <returns></returns>
+        public T LoadSingleData<T, U>(string storedProcesdure, U parameters)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return connection.QuerySingle<T>(storedProcesdure, parameters,
+                    commandType: CommandType.StoredProcedure);
             }
         }
 

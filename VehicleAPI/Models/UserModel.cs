@@ -13,6 +13,7 @@ namespace VehicleAPI.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public string Role { get; set; }
+        public int RoleID { get; set; } = 0; // user 
 
         private string _password;
         public string Password
@@ -28,9 +29,5 @@ namespace VehicleAPI.Models
                 _password = Convert.ToBase64String(hash);
             }
         }
-
-
-
-
     }
 }
