@@ -34,6 +34,7 @@ namespace VehicleAPI
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+
             }).AddCookie(options =>
             {
                 //options.LoginPath = "/Account/LogIn";

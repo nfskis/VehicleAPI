@@ -15,13 +15,14 @@ using VehicleAPI.Models;
 namespace VehicleAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     public class AccountController : Controller
     {
-        private readonly AccountProcessor _AccountProcessor;
+        private readonly AccountProcessor AccountProcessor;
 
         public AccountController(IConfiguration configuration)
         {
-            _AccountProcessor = new AccountProcessor(configuration);
+            AccountProcessor = new AccountProcessor(configuration);
         }
 
         /// <summary>
@@ -30,10 +31,11 @@ namespace VehicleAPI.Controllers
         /// <param name="value">Vehicle Tracking Model</param>
         /// <param name="vehicleID">Vehicle ID</param>
         [HttpPost]
+        [AllowAnonymous]
         [Route("api/Account/register/")]
         public void RegisterUser([FromForm] UserModel value)
         {
-            _AccountProcessor.RegisterUser(value);
+            AccountProcessor.RegisterUser(value);
         }
 
         /// <summary>
@@ -42,10 +44,11 @@ namespace VehicleAPI.Controllers
         /// <param name="value">Vehicle Tracking Model</param>
         /// <param name="vehicleID">Vehicle ID</param>
         [HttpPost]
+        [AllowAnonymous]
         [Route("api/Account/login/")]
         public async Task<UserModel> UserLoginAsync([FromForm] UserModel value)
         {
-            var loginUser = _AccountProcessor.LoginUser(value);
+            var loginUser = AccountProcessor.LoginUser(value);
             if (loginUser == null)
             {
                 // redirection to login page
@@ -60,7 +63,8 @@ namespace VehicleAPI.Controllers
                 indentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, loginUser.UserSeqID));
                 indentity.AddClaim(new Claim(ClaimTypes.Email, loginUser.Email));
                 indentity.AddClaim(new Claim(ClaimTypes.Name, $@"{loginUser.FirstName} {loginUser.LastName}"));
-
+                indentity.AddClaim(new Claim(ClaimTypes.Role, $@"{loginUser.Role}"));
+                
                 var princiapl = new ClaimsPrincipal(indentity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, princiapl,
@@ -85,7 +89,6 @@ namespace VehicleAPI.Controllers
         /// </summary>
         /// <param name="value"></param>
         [HttpPost]
-        [Authorize]
         [Route("api/Account/logOut/")]
         public async void UesrLogOutAsync()
         {

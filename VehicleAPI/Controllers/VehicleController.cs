@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using VehicleAPI.Models;
 namespace VehicleAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     public class VehicleController : ControllerBase
     {
         private VehicleProcessor VehicleProcessor;
