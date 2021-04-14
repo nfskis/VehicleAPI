@@ -15,11 +15,11 @@ using VehicleAPI.Models;
 namespace VehicleAPI.Controllers
 {
     [ApiController]
-    public class LoginController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private LoginProcessor LoginProcessor;
 
-        public LoginController(IConfiguration configuration)
+        public AccountController(IConfiguration configuration)
         {
             LoginProcessor = new LoginProcessor(configuration);
         }
@@ -50,7 +50,8 @@ namespace VehicleAPI.Controllers
             var loginUser = LoginProcessor.LoginUser(value);
             if (loginUser == null)
             {
-                throw new Exception("Failed Login");
+                // redirection to login page
+                throw new Exception("User doen't existed in our database");
             }
 
             try
@@ -60,6 +61,7 @@ namespace VehicleAPI.Controllers
                                                     ClaimTypes.Role);
                 indentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, loginUser.Email));
                 indentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, loginUser.UserSeqID));
+                
 
                 var princiapl = new ClaimsPrincipal(indentity);
 
@@ -68,15 +70,15 @@ namespace VehicleAPI.Controllers
                     {
                         IsPersistent = false,
                         ExpiresUtc = DateTime.Now.AddHours(1),
-                        AllowRefresh = true
+                        AllowRefresh = true                        
                     });
 
                 return loginUser;
             }
-            catch
+            catch(Exception ex)
             {
-                // login failed
-                return null;
+                // login failed or redirection to error page
+                throw new Exception("Failed Login: " + ex.Message);
             }
         }
 
