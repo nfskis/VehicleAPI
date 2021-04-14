@@ -66,6 +66,15 @@
     <Build Include="dbo\Tables\UserRoles.sql" />
     <Build Include="dbo\Tables\Users.sql" />
     <Build Include="dbo\Tables\Vehicles.sql" />
+    <Build Include="dbo\Stored Procedures\Account_LoginUser.sql" />
+    <Build Include="dbo\Stored Procedures\Account_RegisterUser.sql" />
+    <Build Include="dbo\Stored Procedures\Track_TrackAllByVehicleSeqID.sql" />
+    <Build Include="dbo\Stored Procedures\Track_GetCurrentLocation.sql" />
+    <Build Include="dbo\Stored Procedures\Track_UpdateTrack.sql" />
+    <Build Include="dbo\Stored Procedures\Vehicle_FindVehicleByVehicleID.sql" />
+    <Build Include="dbo\Stored Procedures\Track_RegisterTrack.sql" />
+    <Build Include="dbo\Stored Procedures\Vehicle_RegisterVehicle.sql" />
+    <Build Include="dbo\Stored Procedures\Vehicle_FindVehicleByPlateNumber.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="VehicleDBase.refactorlog" />
