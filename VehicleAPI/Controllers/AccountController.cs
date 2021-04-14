@@ -15,18 +15,17 @@ using VehicleAPI.Models;
 namespace VehicleAPI.Controllers
 {
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
-        private LoginProcessor LoginProcessor;
+        private readonly AccountProcessor _AccountProcessor;
 
         public AccountController(IConfiguration configuration)
         {
-            LoginProcessor = new LoginProcessor(configuration);
+            _AccountProcessor = new AccountProcessor(configuration);
         }
 
         /// <summary>
         /// Register Track of Vehicle 
-        /// https://localhost:44309/api/Login/Register/
         /// </summary>
         /// <param name="value">Vehicle Tracking Model</param>
         /// <param name="vehicleID">Vehicle ID</param>
@@ -34,12 +33,11 @@ namespace VehicleAPI.Controllers
         [Route("api/Account/register/")]
         public void RegisterUser([FromForm] UserModel value)
         {
-            LoginProcessor.RegisterUser(value);
+            _AccountProcessor.RegisterUser(value);
         }
 
         /// <summary>
         /// Register Track of Vehicle 
-        /// https://localhost:44309/api/Login/Login/
         /// </summary>
         /// <param name="value">Vehicle Tracking Model</param>
         /// <param name="vehicleID">Vehicle ID</param>
@@ -47,7 +45,7 @@ namespace VehicleAPI.Controllers
         [Route("api/Account/login/")]
         public async Task<UserModel> UserLoginAsync([FromForm] UserModel value)
         {
-            var loginUser = LoginProcessor.LoginUser(value);
+            var loginUser = _AccountProcessor.LoginUser(value);
             if (loginUser == null)
             {
                 // redirection to login page
@@ -59,9 +57,9 @@ namespace VehicleAPI.Controllers
                 var indentity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme,
                                                     ClaimTypes.Name,
                                                     ClaimTypes.Role);
-                indentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, loginUser.Email));
                 indentity.AddClaim(new Claim(ClaimTypes.NameIdentifier, loginUser.UserSeqID));
-                
+                indentity.AddClaim(new Claim(ClaimTypes.Email, loginUser.Email));
+                indentity.AddClaim(new Claim(ClaimTypes.Name, $@"{loginUser.FirstName} {loginUser.LastName}"));
 
                 var princiapl = new ClaimsPrincipal(indentity);
 
@@ -70,12 +68,12 @@ namespace VehicleAPI.Controllers
                     {
                         IsPersistent = false,
                         ExpiresUtc = DateTime.Now.AddHours(1),
-                        AllowRefresh = true                        
+                        AllowRefresh = true
                     });
 
                 return loginUser;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // login failed or redirection to error page
                 throw new Exception("Failed Login: " + ex.Message);
@@ -87,8 +85,8 @@ namespace VehicleAPI.Controllers
         /// </summary>
         /// <param name="value"></param>
         [HttpPost]
-        [Route("api/Account/logOut/")]
         [Authorize]
+        [Route("api/Account/logOut/")]
         public async void UesrLogOutAsync()
         {
             await HttpContext.SignOutAsync();
