@@ -41,6 +41,7 @@ namespace VehicleAPI.Controllers
         /// <param name="value"></param>
         [HttpGet]
         [Route("api/vehicle/search/")]
+        [Authorize(Roles = "Admin")]
         public VehicleModel SearchbyPlateNumber([FromHeader] string PlateNumber)
         {
             return VehicleProcessor.FindVehicleByPlateNumber(PlateNumber);
