@@ -77,7 +77,7 @@ The solutions used framework:
 
 # Track
 
-## [POST] /api?/track?/register
+## [POST] /api/track/register
 
  - Role-based authorization
     - Required login 
