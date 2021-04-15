@@ -65,6 +65,7 @@ namespace VehicleAPI.BusinessLogic
                                                                     {
                                                                         VehicleSeqID = Guid.NewGuid().ToString(),
                                                                         PlateNumber = value.PlateNumber,
+                                                                        UserSeqID = value.UserSeqID,
                                                                         Brand = value.Brand,
                                                                         Model = value.Model
                                                                     });

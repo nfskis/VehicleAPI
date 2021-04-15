@@ -75,9 +75,10 @@ namespace VehicleAPI.BusinessLogic
         private void AddVechiles()
         {
 
-            string query = @"INSERT INTO Vehicles(VehicleSeqID, PlateNumber, Brand, Model)
-                        VALUES(@VehicleSeqID, @PlateNumber, @Brand, @Model)";
+            string query = @"INSERT INTO Vehicles(VehicleSeqID, PlateNumber, Brand, Model, UserSeqID)
+                        VALUES(@VehicleSeqID, @PlateNumber, @Brand, @Model, @userSeqID)";
 
+            var users = SqlDataAccess.LoadData<UserModel>("Select * from Users");
 
             for (int i = 0; i < 100; i++)
             {
@@ -86,6 +87,7 @@ namespace VehicleAPI.BusinessLogic
                     VehicleSeqID = Guid.NewGuid().ToString(),
                     Brand = i % 2 == 0 ? "Honda" : "Toyota",
                     Model = i % 2 == 0 ? "Camry" : "Sienna",
+                    UserSeqID = users[new Random().Next(0, users.Count)].UserSeqID,
                     PlateNumber = $"{new Random(i).Next(99).ToString()}{new Random(i).Next(99)}",
                     CreatedDate = DateTime.Now,
                     LastModifiedDate = DateTime.Now

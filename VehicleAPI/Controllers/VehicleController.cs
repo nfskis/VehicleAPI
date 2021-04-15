@@ -32,6 +32,7 @@ namespace VehicleAPI.Controllers
         [Authorize(Roles = "User, Admin")]
         public void RegisterVehicle([FromForm] RegisterVehicleViewModel value)
         {
+            value.UserSeqID = User.Claims.First().Value;
             VehicleProcessor.RegisterVehicle(value);
         }
 

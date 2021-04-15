@@ -7,5 +7,6 @@
     [Password] NVARCHAR(128) NOT NULL, 
     [RoleID] TINYINT  NOT NULL, 
     [CreatedDate] DATETIME NOT NULL DEFAULT GetDate(), 
-    [LastModifiedDate] DATETIME NOT NULL DEFAULT GetDate()
+    [LastModifiedDate] DATETIME NOT NULL DEFAULT GetDate(), 
+    CONSTRAINT [FK_Users_ToTable] FOREIGN KEY ([RoleID]) REFERENCES [UserRoles]([RoleID])
 )

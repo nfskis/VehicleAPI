@@ -49,6 +49,16 @@ namespace VehicleAPI.BusinessLogic
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="track"></param>
+        /// <returns></returns>
+        public bool IsUserVehicle(string userID, string VehicleID)
+        {
+            return VehicleProcessor.FindVehicleByVehicleID(VehicleID).UserSeqID == userID;
+        }
+
+        /// <summary>
         /// return Current Vehicle location 
         /// </summary>
         /// <param name="vehicleSeqID">Target vehicle sequense ID</param>

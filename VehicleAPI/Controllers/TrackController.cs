@@ -30,10 +30,17 @@ namespace VehicleAPI.Controllers
         /// <param name="vehicleID">Vehicle ID</param>
         [HttpPost]
         [Route("api/track/register/")]
-        [Authorize(Roles = "User, Admin")]
         public void RegisterTrack([FromForm] RegisterTrackViewModel value)
         {
-            TrackProcessor.RegisterTrack(value);
+            // current user allows to add tracking record.
+            // doens't allows to add tracking record for other vehicle.
+            bool IsUserVehicle = TrackProcessor.IsUserVehicle(User.Claims.First().Value,
+                                                                value.VehicleSeqID);
+            if (User.IsInRole("Admin") || IsUserVehicle)
+            {
+                TrackProcessor.RegisterTrack(value);
+            }
+
         }
 
         /// <summary>
@@ -49,7 +56,7 @@ namespace VehicleAPI.Controllers
         public List<VehicleTrackViewModel> TrackRange([FromHeader] string VehicleSeqID, DateTime startTime, DateTime endTime)
         {
             return TrackProcessor.GetTracksByVehicleSeqID(VehicleSeqID)
-               .Where(curr => DateTime.Compare(curr.CreatedDate, startTime) >= 0 
+               .Where(curr => DateTime.Compare(curr.CreatedDate, startTime) >= 0
                             && DateTime.Compare(curr.CreatedDate, endTime) <= 0)
                .ToList();
         }
