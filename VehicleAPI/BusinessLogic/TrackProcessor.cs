@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using VehicleAPI.DBHelpers;
 using VehicleAPI.Models;
 using VehicleAPI.ViewModels;
@@ -63,7 +64,7 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="vehicleSeqID">Target vehicle sequense ID</param>
         /// <returns></returns>
-        public int RegisterTrack(RegisterTrackViewModel value)
+        public async Task<int> RegisterTrackAsync(RegisterTrackViewModel value)
         {
             // Check to eixted Vehicle ID
             bool isExisted = VehicleProcessor.FindVehicleByVehicleID(value.VehicleSeqID) != null ? true : false;
@@ -94,7 +95,7 @@ namespace VehicleAPI.BusinessLogic
             }
             #endregion
 
-            return SqlDataAccess.SaveData<TrackModel, dynamic>("dbo.Track_RegisterTrack",
+            return await SqlDataAccess.SaveDataAsync<TrackModel, dynamic>("dbo.Track_RegisterTrack",
                                                                 new
                                                                 {
                                                                     TrackSeqID = Guid.NewGuid().ToString(),

@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace VehicleAPI.DBHelpers
 {
@@ -104,7 +105,6 @@ namespace VehicleAPI.DBHelpers
             }
         }
 
-
         /// <summary>
         /// return applied items count in the database.
         /// </summary>
@@ -123,6 +123,21 @@ namespace VehicleAPI.DBHelpers
         /// <summary>
         /// return applied items count in the database.
         /// </summary>
+        /// <typeparam name="T">type of data model</typeparam>
+        /// <param name="sqlQuery">query</param>
+        /// <param name="data">type of data model</param>
+        /// <returns></returns>
+        public async Task<int> SaveDataAsync<T>(string sqlQuery, T data)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return await connection.ExecuteAsync(sqlQuery, data);
+            }
+        }
+
+        /// <summary>
+        /// return applied items count in the database.
+        /// </summary>
         /// <typeparam name="T">data model</typeparam>
         /// <typeparam name="U">parameter model</typeparam>
         /// <param name="storedProcesdure">stored Procedure</param>
@@ -133,6 +148,23 @@ namespace VehicleAPI.DBHelpers
             using (IDbConnection connection = new SqlConnection(GetConnectionString()))
             {
                 return connection.Execute(storedProcesdure, parameters,
+                    commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// return applied items count in the database.
+        /// </summary>
+        /// <typeparam name="T">data model</typeparam>
+        /// <typeparam name="U">parameter model</typeparam>
+        /// <param name="storedProcesdure">stored Procedure</param>
+        /// <param name="parameters">parameters</param>
+        /// <returns></returns>
+        public async Task<int> SaveDataAsync<T, U>(string storedProcesdure, U parameters)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return await connection.ExecuteAsync(storedProcesdure, parameters,
                     commandType: CommandType.StoredProcedure);
             }
         }

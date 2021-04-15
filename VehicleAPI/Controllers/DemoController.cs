@@ -48,12 +48,12 @@ namespace VehicleAPI.Controllers
         public async void recordTrack()
         {
             string query = "SELECT * FROM Vehicles";
+            var vehicles = SqlDataAccess.LoadData<VehicleModel>(query);
             int count = 0;
+            Random rand = new Random();
             while (true)
             {
-                Debug.WriteLine($@"Record{count} ON: {DateTime.Now}");
-                var vehicles = SqlDataAccess.LoadData<VehicleModel>(query);
-                Random rand = new Random();
+                Debug.WriteLine($@"Record Track {count} Start: {DateTime.Now}");
                 for (int i = 0; i < vehicles.Count; i++)
                 {
                     var vehicle = vehicles[i];
@@ -66,14 +66,12 @@ namespace VehicleAPI.Controllers
                         Longitude = Math.Round(lo, 6)
                     };
 
-                    TrackProcessor.RegisterTrack(track);
+                    _ = await TrackProcessor.RegisterTrackAsync(track);
                 }
-                Debug.WriteLine($@"Record{count} OFF: {DateTime.Now}");                
+                Debug.WriteLine($@"Record Track {count} End: {DateTime.Now}");                
                 await Task.Delay(30000);
                 count++;
             }
-
-
         }
 
     }

@@ -7,5 +7,4 @@
     [UserSeqID] NVARCHAR(128) NOT NULL ,
     [CreatedDate] DATETIME NOT NULL DEFAULT GetDate(), 
     [LastModifiedDate] DATETIME NOT NULL DEFAULT getDate(), 
-    CONSTRAINT [FK_Vehicles_ToTable] FOREIGN KEY ([UserSeqID]) REFERENCES [Users]([UserSeqID]) 
 )

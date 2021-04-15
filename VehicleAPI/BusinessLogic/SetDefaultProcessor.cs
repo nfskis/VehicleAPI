@@ -39,7 +39,7 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="value">User model</param>
         /// <returns>applied row count</returns>
-        public void SetDefaults()
+        public async void SetDefaults()
         {
             ClearTables();
 
@@ -47,7 +47,7 @@ namespace VehicleAPI.BusinessLogic
 
             AddUsers();
 
-            AddVechiles();
+            await AddVechilesAsync();
 
         }
 
@@ -72,7 +72,7 @@ namespace VehicleAPI.BusinessLogic
             }
         }
 
-        private void AddVechiles()
+        private async Task AddVechilesAsync()
         {
 
             string query = @"INSERT INTO Vehicles(VehicleSeqID, PlateNumber, Brand, Model, UserSeqID)
@@ -80,7 +80,7 @@ namespace VehicleAPI.BusinessLogic
 
             var users = SqlDataAccess.LoadData<UserModel>("Select * from Users");
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10000; i++)
             {
                 var vehicle = new VehicleModel()
                 {
@@ -93,7 +93,7 @@ namespace VehicleAPI.BusinessLogic
                     LastModifiedDate = DateTime.Now
 
                 };
-                SqlDataAccess.SaveData(query, vehicle);
+                await SqlDataAccess.SaveDataAsync(query, vehicle);
             }
         }
 

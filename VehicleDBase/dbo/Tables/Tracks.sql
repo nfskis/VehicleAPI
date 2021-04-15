@@ -6,5 +6,4 @@
     [Longitude] FLOAT NOT NULL, 
     [CreatedDate] DATETIME NOT NULL DEFAULT Getdate(), 
     PRIMARY KEY ([TrackSeqID]), 
-    CONSTRAINT [FK_Tracks_ToTable] FOREIGN KEY ([VehicleSeqID]) REFERENCES [Vehicles]([VehicleSeqID])
 )

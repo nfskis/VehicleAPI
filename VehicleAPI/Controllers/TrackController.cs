@@ -38,7 +38,7 @@ namespace VehicleAPI.Controllers
                                                                 value.VehicleSeqID);
             if (User.IsInRole("Admin") || IsUserVehicle)
             {
-                TrackProcessor.RegisterTrack(value);
+                TrackProcessor.RegisterTrackAsync(value);
             }
 
         }
