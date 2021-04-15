@@ -7,7 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using VehicleAPI.BusinessLogic;
+using VehicleAPI.Models;
 using VehicleAPI.ViewModels;
 
 namespace VehicleAPI.Controllers
@@ -30,7 +32,7 @@ namespace VehicleAPI.Controllers
         /// <param name="vehicleID">Vehicle ID</param>
         [HttpPost]
         [Route("api/track/register/")]
-        public void RegisterTrack([FromForm] RegisterTrackViewModel value)
+        public async Task<ApiResultMessage> RegisterTrackAsync([FromForm] RegisterTrackViewModel value)
         {
             // current user allows to add tracking record.
             // doens't allows to add tracking record for other vehicle.
@@ -38,9 +40,14 @@ namespace VehicleAPI.Controllers
                                                                 value.VehicleSeqID);
             if (User.IsInRole("Admin") || IsUserVehicle)
             {
-                TrackProcessor.RegisterTrackAsync(value);
+                _ = await TrackProcessor.RegisterTrackAsync(value);
+            }
+            else
+            {
+                return new ApiResultMessage("Login user is not Admin or vehicle user.", "Failed");
             }
 
+            return new ApiResultMessage("Track data has been registed", "Success");
         }
 
         /// <summary>

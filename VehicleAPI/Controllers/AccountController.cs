@@ -34,9 +34,10 @@ namespace VehicleAPI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("api/Account/register/")]
-        public void RegisterUser([FromForm] RegisterUserViewModel value)
+        public ApiResultMessage RegisterUser([FromForm] RegisterUserViewModel value)
         {
             AccountProcessor.RegisterUser(value);
+            return new ApiResultMessage("Regiser user successful", "Success");
         }
 
         /// <summary>
@@ -47,13 +48,13 @@ namespace VehicleAPI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("api/Account/login/")]
-        public async Task<UserModel> UserLoginAsync([FromForm] LoginUserViewModel value)
+        public async Task<ApiResultMessage> UserLoginAsync([FromForm] LoginUserViewModel value)
         {
             var loginUser = AccountProcessor.LoginUser(value);
             if (loginUser == null)
             {
                 // redirection to login page
-                throw new Exception("User doen't existed in our database");
+                return new ApiResultMessage("User doen't existed in our database", "Failed");
             }
 
             try
@@ -76,12 +77,12 @@ namespace VehicleAPI.Controllers
                         AllowRefresh = true
                     });
 
-                return loginUser;
+                return new ApiResultMessage($@"Successful login user:{loginUser.FirstName}", "Successful");
             }
             catch (Exception ex)
             {
                 // login failed or redirection to error page
-                throw new Exception("Failed Login: " + ex.Message);
+                return new ApiResultMessage($@"{ex.Message}", "Failed");
             }
         }
 
@@ -91,9 +92,10 @@ namespace VehicleAPI.Controllers
         /// <param name="value"></param>
         [HttpPost]
         [Route("api/Account/logOut/")]
-        public async void UesrLogOutAsync()
+        public async Task<ApiResultMessage> UesrLogOutAsync()
         {
             await HttpContext.SignOutAsync();
+            return new ApiResultMessage($@"Logout Successful: {User.Identity.Name}", "Success");
         }
 
 

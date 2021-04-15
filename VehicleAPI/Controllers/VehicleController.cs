@@ -30,10 +30,18 @@ namespace VehicleAPI.Controllers
         [HttpPost]
         [Route("api/Vehicle/register/")]
         [Authorize(Roles = "User, Admin")]
-        public void RegisterVehicle([FromForm] RegisterVehicleViewModel value)
+        public ApiResultMessage RegisterVehicle([FromForm] RegisterVehicleViewModel value)
         {
-            value.UserSeqID = User.Claims.First().Value;
-            VehicleProcessor.RegisterVehicle(value);
+            try
+            {
+                value.UserSeqID = User.Claims.First().Value;
+                VehicleProcessor.RegisterVehicle(value);
+                return new ApiResultMessage("Resister Vehicle has been sucessful", "Success");
+            }
+            catch (Exception)
+            {
+                return new ApiResultMessage("Resister Vehicle has been Failed", "Failed");
+            }
         }
 
         /// <summary>
