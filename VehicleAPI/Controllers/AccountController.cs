@@ -33,8 +33,8 @@ namespace VehicleAPI.Controllers
         /// <param name="vehicleID">Vehicle ID</param>
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/Account/register/")]
-        public ApiResultMessage RegisterUser([FromForm] RegisterUserViewModel value)
+        [Route("api/account/user/")]
+        public ApiResultMessage RegisterUser([FromForm] UserViewModel value)
         {
             AccountProcessor.RegisterUser(value);
             return new ApiResultMessage("Regiser user successful", "Success");
@@ -45,9 +45,51 @@ namespace VehicleAPI.Controllers
         /// </summary>
         /// <param name="value">Vehicle Tracking Model</param>
         /// <param name="vehicleID">Vehicle ID</param>
+        [HttpPut]
+        [Route("api/account/user")]
+        public ApiResultMessage UpdateUser([FromForm] UpdateUserViewModel value)
+        {
+            AccountProcessor.UpdateUser(value);
+            return new ApiResultMessage("Regiser user successful", "Success");
+        }
+
+        /// <summary>
+        /// Register Track of Vehicle 
+        /// </summary>
+        /// <param name="value">Vehicle Tracking Model</param>
+        /// <param name="vehicleID">Vehicle ID</param>
+        [HttpDelete]
+        [Route("api/account/user")]
+        [Authorize(Roles = "Admin")]
+        public ApiResultMessage DeleteUser(string userEmail)
+        {
+            var userId = AccountProcessor.GetUsers()
+                    .FirstOrDefault(curr => curr.Email == userEmail)?.UserSeqID;
+            AccountProcessor.DeleteUser(userId);
+            return new ApiResultMessage("Regiser user successful", "Success");
+        }
+
+        /// <summary>
+        /// Register Track of Vehicle 
+        /// </summary>
+        /// <param name="value">Vehicle Tracking Model</param>
+        /// <param name="vehicleID">Vehicle ID</param>
+        [HttpGet]
+        [Route("api/account/user")]
+        [Authorize(Roles = "Admin")]
+        public List<UserViewModel> GetUser()
+        {
+            return AccountProcessor.GetUsers();
+        }
+
+        /// <summary>
+        /// Register Track of Vehicle 
+        /// </summary>
+        /// <param name="value">Vehicle Tracking Model</param>
+        /// <param name="vehicleID">Vehicle ID</param>
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/Account/login/")]
+        [Route("api/account/login/")]
         public async Task<ApiResultMessage> UserLoginAsync([FromForm] LoginUserViewModel value)
         {
             var loginUser = AccountProcessor.LoginUser(value);
@@ -90,8 +132,8 @@ namespace VehicleAPI.Controllers
         /// User Logout
         /// </summary>
         /// <param name="value"></param>
-        [HttpPost]
-        [Route("api/Account/logOut/")]
+        [HttpGet]
+        [Route("api/account/logOut/")]
         public async Task<ApiResultMessage> UesrLogOutAsync()
         {
             await HttpContext.SignOutAsync();
