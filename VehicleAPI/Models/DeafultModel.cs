@@ -1,4 +1,4 @@
-﻿namespace VehicleAPI.Models
+﻿namespace VehicleAPI.ViewModels
 {
     public class DeafultModel
     {

@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace VehicleAPI.ViewModels
 {
-    public class TrackRangeModel
+    public class RegisterTrackViewModel
     {
         public string VehicleSeqID { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }

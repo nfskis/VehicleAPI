@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using VehicleAPI.BusinessLogic;
 using VehicleAPI.Models;
+using VehicleAPI.ViewModels;
 
 namespace VehicleAPI.Controllers
 {
@@ -33,7 +34,7 @@ namespace VehicleAPI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("api/Account/register/")]
-        public void RegisterUser([FromForm] UserModel value)
+        public void RegisterUser([FromForm] RegisterUserViewModel value)
         {
             AccountProcessor.RegisterUser(value);
         }
@@ -46,7 +47,7 @@ namespace VehicleAPI.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("api/Account/login/")]
-        public async Task<UserModel> UserLoginAsync([FromForm] UserModel value)
+        public async Task<UserModel> UserLoginAsync([FromForm] LoginUserViewModel value)
         {
             var loginUser = AccountProcessor.LoginUser(value);
             if (loginUser == null)
@@ -64,7 +65,7 @@ namespace VehicleAPI.Controllers
                 indentity.AddClaim(new Claim(ClaimTypes.Email, loginUser.Email));
                 indentity.AddClaim(new Claim(ClaimTypes.Name, $@"{loginUser.FirstName} {loginUser.LastName}"));
                 indentity.AddClaim(new Claim(ClaimTypes.Role, $@"{loginUser.Role}"));
-                
+
                 var princiapl = new ClaimsPrincipal(indentity);
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, princiapl,

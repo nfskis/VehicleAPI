@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using VehicleAPI.BusinessLogic;
 using VehicleAPI.Models;
+using VehicleAPI.ViewModels;
 
 namespace VehicleAPI.Controllers
 {
@@ -24,14 +25,37 @@ namespace VehicleAPI.Controllers
 
         /// <summary>
         /// Register Vehicle
-        /// https://localhost:44309/api/vehicle/register/
         /// </summary>
         /// <param name="value">VehicleModel</param>
-        [Route("api/Vehicle/register/")]
         [HttpPost]
-        public void Post([FromBody] VehicleModel value)
+        [Route("api/Vehicle/register/")]
+        [Authorize(Roles = "User, Admin")]
+        public void RegisterVehicle([FromForm] RegisterVehicleViewModel value)
         {
             VehicleProcessor.RegisterVehicle(value);
+        }
+
+        /// <summary>
+        /// search Vehicle by plate number
+        /// </summary>
+        /// <param name="value"></param>
+        [HttpGet]
+        [Route("api/vehicle/search/")]
+        public VehicleModel SearchbyPlateNumber([FromHeader] string PlateNumber)
+        {
+            return VehicleProcessor.FindVehicleByPlateNumber(PlateNumber);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        [HttpGet]
+        [Route("api/vehicle/all/")]
+        [Authorize(Roles = "Admin")]
+        public List<VehicleModel> all()
+        {
+            return VehicleProcessor.GetAllVehicles();
         }
 
 

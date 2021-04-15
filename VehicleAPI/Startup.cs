@@ -37,9 +37,9 @@ namespace VehicleAPI
 
             }).AddCookie(options =>
             {
-                //options.LoginPath = "/Account/LogIn";
-                //options.LogoutPath = "/Account/LogOut";
-                //options.AccessDeniedPath = "/Home/Index";
+                options.LoginPath = "/Account/LogIn";
+                options.LogoutPath = "/Account/LogOut";
+                //options.AccessDeniedPath = "/Error/AccessDenied";
             });
 
             services.AddControllers();

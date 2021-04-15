@@ -14,5 +14,5 @@ Begin
     WHERE  
 						users.RoleID = UserRoles.RoleID 
 						AND Email = @Email 
-						AND password = @Password
+						AND Password = @Password
 End

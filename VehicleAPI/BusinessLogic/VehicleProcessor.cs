@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using VehicleAPI.DBHelpers;
 using VehicleAPI.Models;
+using VehicleAPI.ViewModels;
 
 namespace VehicleAPI.BusinessLogic
 {
@@ -25,7 +26,6 @@ namespace VehicleAPI.BusinessLogic
             return SqlDataAccess.LoadSingleData<VehicleModel, dynamic>("dbo.Vehicle_FindVehicleByVehicleID", new { vehicleID });
         }
 
-
         /// <summary>
         /// return Vehicle model
         /// </summary>
@@ -37,20 +37,36 @@ namespace VehicleAPI.BusinessLogic
         }
 
         /// <summary>
+        /// return Vehicle model
+        /// </summary>
+        /// <param name="value">Vehicle ID</param>
+        /// <returns></returns>
+        public List<VehicleModel> GetAllVehicles()
+        {
+            return SqlDataAccess.LoadData<VehicleModel, dynamic>("dbo.Vehicle_GetAllVehicles", null);
+        }
+
+        /// <summary>
         /// Register Vehicle
         /// </summary>
         /// <param name="value">Vehicle model</param>
         /// <returns></returns>
-        public int RegisterVehicle(VehicleModel value)
+        public int RegisterVehicle(RegisterVehicleViewModel value)
         {
-            value.VehicleSeqID = Guid.NewGuid().ToString();
+
+            var vehicle = FindVehicleByPlateNumber(value.PlateNumber);
+            if (vehicle != null)
+            {
+                throw new Exception($@"The Vehicle already has been registery PlateNumber: {value.PlateNumber}");
+            }
+
             return SqlDataAccess.SaveData<VehicleModel, dynamic>("dbo.Vehicle_RegisterVehicle",
                                                                     new
                                                                     {
-                                                                        value.VehicleSeqID,
-                                                                        value.PlateNumber,
-                                                                        value.Brand,
-                                                                        value.Model
+                                                                        VehicleSeqID = Guid.NewGuid().ToString(),
+                                                                        PlateNumber = value.PlateNumber,
+                                                                        Brand = value.Brand,
+                                                                        Model = value.Model
                                                                     });
         }
     }

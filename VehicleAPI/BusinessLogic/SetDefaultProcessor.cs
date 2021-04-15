@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VehicleAPI.DBHelpers;
 using VehicleAPI.Models;
+using VehicleAPI.ViewModels;
 
 namespace VehicleAPI.BusinessLogic
 {
@@ -27,6 +28,9 @@ namespace VehicleAPI.BusinessLogic
             SqlDataAccess.SingleOrDefault(query);
 
             query = @"DELETE FROM UserRoles";
+            SqlDataAccess.SingleOrDefault(query);
+
+            query = @"DELETE FROM Tracks";
             SqlDataAccess.SingleOrDefault(query);
         }
 
@@ -51,7 +55,7 @@ namespace VehicleAPI.BusinessLogic
         {
             var users = new List<UserModel>()
             {
-                new UserModel(){ RoleID = 1, Email="insung.kim@gmail.com", FirstName="Insung", LastName="Kim", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 1, Email="admin@gmail.com", FirstName="Insung", LastName="Kim", Password="admin", UserSeqID=Guid.NewGuid().ToString()},
                 new UserModel(){ RoleID = 0, Email="Joon@gmail.com", FirstName="Joon", LastName="Smith", Password="Smith", UserSeqID=Guid.NewGuid().ToString()},
                 new UserModel(){ RoleID = 0, Email="mao@gmail.com", FirstName="mao", LastName="lee", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
                 new UserModel(){ RoleID = 0, Email="Jamin.kim@gmail.com", FirstName="Jamin", LastName="Kim", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
@@ -75,7 +79,7 @@ namespace VehicleAPI.BusinessLogic
                         VALUES(@VehicleSeqID, @PlateNumber, @Brand, @Model)";
 
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 var vehicle = new VehicleModel()
                 {

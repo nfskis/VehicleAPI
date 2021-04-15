@@ -1,4 +1,6 @@
-﻿namespace VehicleAPI.BusinessLogic
+﻿using System;
+
+namespace VehicleAPI.Models
 {
     public class UserRoleModel
     {

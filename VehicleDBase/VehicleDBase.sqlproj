@@ -75,6 +75,7 @@
     <Build Include="dbo\Stored Procedures\Track_RegisterTrack.sql" />
     <Build Include="dbo\Stored Procedures\Vehicle_RegisterVehicle.sql" />
     <Build Include="dbo\Stored Procedures\Vehicle_FindVehicleByPlateNumber.sql" />
+    <Build Include="dbo\Stored Procedures\Vehicle_GetAllVehicles.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="VehicleDBase.refactorlog" />

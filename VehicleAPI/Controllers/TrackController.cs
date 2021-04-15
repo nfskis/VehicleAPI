@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using VehicleAPI.BusinessLogic;
-using VehicleAPI.Models;
+using VehicleAPI.ViewModels;
 
 namespace VehicleAPI.Controllers
 {
-    [ApiController]    
+    [ApiController]
     [Authorize]
     public class TrackController : ControllerBase
     {
@@ -30,9 +31,9 @@ namespace VehicleAPI.Controllers
         [HttpPost]
         [Route("api/track/register/")]
         [Authorize(Roles = "User, Admin")]
-        public void RegisterTrack([FromBody] TrackModel value, string vehicleID)
+        public void RegisterTrack([FromForm] RegisterTrackViewModel value)
         {
-            TrackProcessor.RegisterTrack(value, vehicleID);
+            TrackProcessor.RegisterTrack(value);
         }
 
         /// <summary>
@@ -42,14 +43,15 @@ namespace VehicleAPI.Controllers
         /// <param name="startTime">2014-04-14 00:00:00.000 or 2021-04-13 T00:00:00.000</param>
         /// <param name="endTime">2014-04-14 00:00:00.000 or 2021-04-13 T00:00:00.000</param>
         /// <returns>JSON</returns>
-        [HttpPost]
+        [HttpGet]
         [Route("api/track/range/")]
         [Authorize(Roles = "Admin")]
-        public List<VehicleTrackViewModel> TrackRange(TrackRangeModel trackRange)
+        public List<VehicleTrackViewModel> TrackRange([FromHeader] string VehicleSeqID, DateTime startTime, DateTime endTime)
         {
-            return TrackProcessor.GetTracksByVehicleSeqID(trackRange.Id)
-                .Where(curr => curr.CreatedDate >= trackRange.StartTime && curr.CreatedDate <= trackRange.EndTime)
-                .ToList();
+            return TrackProcessor.GetTracksByVehicleSeqID(VehicleSeqID)
+               .Where(curr => DateTime.Compare(curr.CreatedDate, startTime) >= 0 
+                            && DateTime.Compare(curr.CreatedDate, endTime) <= 0)
+               .ToList();
         }
 
         /// <summary>
@@ -60,16 +62,9 @@ namespace VehicleAPI.Controllers
         [HttpGet]
         [Route("api/track/current/")]
         [Authorize(Roles = "Admin")]
-        public VehicleTrackViewModel GetCurrentLocationOfVehicle(string id)
+        public VehicleTrackViewModel GetCurrentLocationOfVehicle([FromHeader] string VehicleSeqID)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return TrackProcessor.GetCurrentLocationByVehicleSeqID(id);
-            }
-            else
-            {
-                return null;
-            }
+            return TrackProcessor.GetCurrentLocationByVehicleSeqID(VehicleSeqID);
         }
     }
 }

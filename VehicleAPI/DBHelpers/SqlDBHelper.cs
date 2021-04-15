@@ -71,7 +71,7 @@ namespace VehicleAPI.DBHelpers
         {
             using (IDbConnection connection = new SqlConnection(GetConnectionString()))
             {
-                return connection.QuerySingleOrDefault<T>(storedProcesdure, parameters,
+                return connection.QueryFirstOrDefault<T>(storedProcesdure, parameters,
                     commandType: CommandType.StoredProcedure);
             }
         }

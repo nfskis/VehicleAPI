@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using VehicleAPI.DBHelpers;
 using VehicleAPI.Models;
+using VehicleAPI.ViewModels;
 
 namespace VehicleAPI.BusinessLogic
 {
@@ -21,24 +22,24 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="value">User model</param>
         /// <returns>applied row count</returns>
-        public int RegisterUser(UserModel value)
+        public int RegisterUser(RegisterUserViewModel value)
         {
-            bool isExisted = LoginUser(value) != null ? true : false;
+            var user = new LoginUserViewModel(value.Email, value.Password);
+            bool isExisted = LoginUser(user) != null ? true : false;
             if (isExisted)
             {
                 throw new Exception($"the givens user eamil existed in DataBase: '{value.Email}'");
             }
 
-            value.UserSeqID = Guid.NewGuid().ToString();
             return SqlDataAccess.SaveData<UserModel, dynamic>("dbo.Account_RegisterUser",
                                                                 new
                                                                 {
-                                                                    value.UserSeqID,
-                                                                    value.FirstName,
-                                                                    value.LastName,
-                                                                    value.Email,
-                                                                    value.Password,
-                                                                    value.RoleID
+                                                                    UserSeqID = Guid.NewGuid().ToString(),
+                                                                    FirstName = value.FirstName,
+                                                                    LastName = value.LastName,
+                                                                    Email = value.Email,
+                                                                    Password = user.Password,
+                                                                    RoleID = value.RoleID,
                                                                 });
         }
 
@@ -47,7 +48,7 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public UserModel LoginUser(UserModel value)
+        public UserModel LoginUser(LoginUserViewModel value)
         {
             return SqlDataAccess.LoadSingleData<UserModel, dynamic>("dbo.Account_LoginUser",
                                                                     new
