@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using VehicleAPI.BusinessLogic;
 using VehicleAPI.Models;
 using VehicleAPI.ViewModels;
+using VehicleAPI.ViewModels.Tracks;
 
 namespace VehicleAPI.Controllers
 {
@@ -36,8 +37,8 @@ namespace VehicleAPI.Controllers
         {
             // current user allows to add tracking record.
             // doens't allows to add tracking record for other vehicle.
-            bool IsUserVehicle = TrackProcessor.IsUserVehicle(User.Claims.First().Value,
-                                                                value.VehicleSeqID);
+            string userId = User.Claims.First().Value;
+            bool IsUserVehicle = TrackProcessor.IsUserVehicle(userId, value.VehicleSeqID);
             if (User.IsInRole("Admin") || IsUserVehicle)
             {
                 _ = await TrackProcessor.RegisterTrackAsync(value);

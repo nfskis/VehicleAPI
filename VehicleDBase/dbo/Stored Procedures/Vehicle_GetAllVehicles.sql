@@ -3,7 +3,7 @@ AS
 BEGIN
 
 	SELECT 
-		VehicleSeqID, PlateNumber, Brand, Model, CreatedDate		
+		VehicleSeqID, UserSeqID, PlateNumber, Brand, Model, CreatedDate		
 	FROM 
 		Vehicles
 

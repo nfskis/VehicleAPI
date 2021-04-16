@@ -46,6 +46,19 @@ namespace VehicleAPI.DBHelpers
         /// <summary>
         /// return matching items in the database.
         /// </summary>
+        /// <typeparam name="T">type of data model</typeparam>
+        /// <param name="sqlQuery">sql query</param>
+        public async Task<IEnumerable<T>> LoadDataAsync<T>(string sqlQuery)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return await connection.QueryAsync<T>(sqlQuery);
+            }
+        }
+
+        /// <summary>
+        /// return matching items in the database.
+        /// </summary>
         /// <typeparam name="T">data model</typeparam>
         /// <typeparam name="U">parameter model</typeparam>
         /// <param name="storedProcesdure">stored Procesdure</param>
@@ -57,6 +70,15 @@ namespace VehicleAPI.DBHelpers
             {
                 return connection.Query<T>(storedProcesdure, parameters,
                     commandType: CommandType.StoredProcedure).ToList();
+            }
+        }
+
+        public async Task<List<T>> LoadDataAsync<T, U>(string storedProcesdure, U parameters)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return (List<T>)await connection.QueryAsync<T>(storedProcesdure, parameters,
+                    commandType: CommandType.StoredProcedure);
             }
         }
 
@@ -100,6 +122,22 @@ namespace VehicleAPI.DBHelpers
             using (IDbConnection connection = new SqlConnection(GetConnectionString()))
             {
                 connection.QueryFirstOrDefault<T>(storedProcesdure, parameters,
+                    commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="storedProcesdure"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        public int StoredProcesdure<T>(string storedProcesdure, T parameters)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                return connection.Execute(storedProcesdure, parameters,
                     commandType: CommandType.StoredProcedure);
             }
         }

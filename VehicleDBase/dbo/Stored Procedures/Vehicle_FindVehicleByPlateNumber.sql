@@ -5,6 +5,7 @@ BEGIN
 
 		SELECT 
 					VehicleSeqID
+				,	UserSeqID
 				, PlateNumber
 				, Brand
 				, Model

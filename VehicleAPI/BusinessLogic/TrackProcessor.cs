@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using VehicleAPI.DBHelpers;
 using VehicleAPI.Models;
 using VehicleAPI.ViewModels;
+using VehicleAPI.ViewModels.Tracks;
 
 namespace VehicleAPI.BusinessLogic
 {
@@ -63,9 +64,9 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="track"></param>
         /// <returns></returns>
-        public bool IsUserVehicle(string userID, string VehicleID)
+        public bool IsUserVehicle(string userID, string vehicleID)
         {
-            return VehicleProcessor.FindVehicleByVehicleID(VehicleID).UserSeqID == userID;
+            return VehicleProcessor.FindVehicleByVehicleID(vehicleID).UserSeqID == userID;
         }
 
         /// <summary>

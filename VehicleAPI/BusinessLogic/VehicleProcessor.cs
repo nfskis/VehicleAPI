@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using VehicleAPI.DBHelpers;
 using VehicleAPI.Models;
 using VehicleAPI.ViewModels;
+using VehicleAPI.ViewModels.Vehicles;
 
 namespace VehicleAPI.BusinessLogic
 {
@@ -37,13 +40,40 @@ namespace VehicleAPI.BusinessLogic
         }
 
         /// <summary>
-        /// return Vehicle model
+        /// return Vehicle models
         /// </summary>
         /// <param name="value">Vehicle ID</param>
         /// <returns></returns>
+        public async Task<List<VehicleModel>> GetAllVehiclesAsync()
+        {
+            return (List<VehicleModel>)await SqlDataAccess.LoadDataAsync<VehicleModel>("dbo.Vehicle_GetAllVehicles");
+        }
+
+        /// <summary>
+        /// return Vehicle models
+        /// </summary>
+        /// <returns></returns>
         public List<VehicleModel> GetAllVehicles()
         {
-            return SqlDataAccess.LoadData<VehicleModel, dynamic>("dbo.Vehicle_GetAllVehicles", null);
+            return SqlDataAccess.LoadData<VehicleModel>("dbo.Vehicle_GetAllVehicles");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="updateVehicle"></param>
+        internal int UpdatVehicle(UpdateVehicleViewModel updateVehicle)
+        {
+            return SqlDataAccess.StoredProcesdure("dbo.UpdateVehicle", updateVehicle);
+        }
+
+        /// <summary>
+        /// delete Vehicle
+        /// </summary>
+        /// <param name="deleteVehicle">Delete Vehicle View Model</param>
+        public int DeleteVehicle(DeleteVehicleViewModel deleteVehicle)
+        {
+            return SqlDataAccess.StoredProcesdure("dbo.deleteVehicle", deleteVehicle);
         }
 
         /// <summary>
@@ -51,7 +81,7 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="value">Vehicle model</param>
         /// <returns></returns>
-        public int RegisterVehicle(RegisterVehicleViewModel value)
+        public int RegisterVehicle(RegisterVehicleViewModel value, string userSeqID)
         {
 
             var vehicle = FindVehicleByPlateNumber(value.PlateNumber);
@@ -64,8 +94,8 @@ namespace VehicleAPI.BusinessLogic
                                                                     new
                                                                     {
                                                                         VehicleSeqID = Guid.NewGuid().ToString(),
+                                                                        UserSeqID = userSeqID,
                                                                         PlateNumber = value.PlateNumber,
-                                                                        UserSeqID = value.UserSeqID,
                                                                         Brand = value.Brand,
                                                                         Model = value.Model
                                                                     });

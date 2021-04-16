@@ -81,6 +81,8 @@
     <Build Include="dbo\Stored Procedures\Account_GetUsers.sql" />
     <Build Include="dbo\Stored Procedures\Track_GetAllTracks.sql" />
     <Build Include="dbo\Stored Procedures\Track_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Vehicle_DeleteVehicle.sql" />
+    <Build Include="dbo\Stored Procedures\Vehicle_UpdateVehicle.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="VehicleDBase.refactorlog" />

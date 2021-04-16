@@ -7,12 +7,10 @@ namespace VehicleAPI.Models
     /// </summary>
     public class VehicleModel
     {
-        public string VehicleSeqID { get; set; }
-        public string UserSeqID { get; set; }
-        public string PlateNumber { get; set; }
-        public string Brand { get; set; }
-        public string Model { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime LastModifiedDate { get; set; }
+        public string VehicleSeqID { get; set; } = "";
+        public string UserSeqID { get; set; } = "";
+        public string PlateNumber { get; set; } = "";
+        public string Brand { get; set; } = "";
+        public string Model { get; set; } = "";
     }
 }

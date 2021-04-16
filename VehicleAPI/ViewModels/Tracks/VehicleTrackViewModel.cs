@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.Json;
 using VehicleAPI.Models;
 
-namespace VehicleAPI.ViewModels
+namespace VehicleAPI.ViewModels.Tracks
 {
     /// <summary>
     /// View model of Tracking 

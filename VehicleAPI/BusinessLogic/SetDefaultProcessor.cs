@@ -55,12 +55,12 @@ namespace VehicleAPI.BusinessLogic
         {
             var users = new List<UserModel>()
             {
-                new UserModel(){ RoleID = 1, Email="admin@gmail.com", FirstName="Insung", LastName="Kim", Password="admin", UserSeqID=Guid.NewGuid().ToString()},
-                new UserModel(){ RoleID = 0, Email="Joon@gmail.com", FirstName="Joon", LastName="Smith", Password="Smith", UserSeqID=Guid.NewGuid().ToString()},
-                new UserModel(){ RoleID = 0, Email="mao@gmail.com", FirstName="mao", LastName="lee", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
-                new UserModel(){ RoleID = 0, Email="Jamin.kim@gmail.com", FirstName="Jamin", LastName="Kim", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
-                new UserModel(){ RoleID = 0, Email="dongMin.kim@gmail.com", FirstName="dongMin", LastName="Kim", Password="insung", UserSeqID=Guid.NewGuid().ToString()},
-                new UserModel(){ RoleID = 2, Email="Keblish@gmail.com", FirstName="Joe", LastName="Keblish", Password="insung", UserSeqID=Guid.NewGuid().ToString()}
+                new UserModel(){ RoleID = 1, Email="admin@gmail.com", FirstName="Insung", LastName="Kim", Password="password", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="user@gmail.com", FirstName="Joon", LastName="Smith", Password="password", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="mao@gmail.com", FirstName="mao", LastName="lee", Password="password", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="Jamin.kim@gmail.com", FirstName="Jamin", LastName="Kim", Password="password", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 0, Email="dongMin.kim@gmail.com", FirstName="dongMin", LastName="Kim", Password="password", UserSeqID=Guid.NewGuid().ToString()},
+                new UserModel(){ RoleID = 2, Email="Keblish@gmail.com", FirstName="Joe", LastName="Keblish", Password="password", UserSeqID=Guid.NewGuid().ToString()}
             };
 
             string query = @"INSERT INTO Users(UserSeqID, FirstName, lastName, email, password, RoleID)
@@ -80,7 +80,7 @@ namespace VehicleAPI.BusinessLogic
 
             var users = SqlDataAccess.LoadData<UserModel>("Select * from Users");
 
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var vehicle = new VehicleModel()
                 {
@@ -88,9 +88,7 @@ namespace VehicleAPI.BusinessLogic
                     Brand = i % 2 == 0 ? "Honda" : "Toyota",
                     Model = i % 2 == 0 ? "Camry" : "Sienna",
                     UserSeqID = users[new Random().Next(0, users.Count)].UserSeqID,
-                    PlateNumber = $"{new Random(i).Next(99).ToString()}{new Random(i).Next(99)}",
-                    CreatedDate = DateTime.Now,
-                    LastModifiedDate = DateTime.Now
+                    PlateNumber = $"{new Random(i).Next(1, 99)}-{new Random(i + 1).Next(1, 99)}{new Random(i + 2).Next(1, 9)}{new Random(i + 3).Next(1, 9)}",
 
                 };
                 await SqlDataAccess.SaveDataAsync(query, vehicle);
