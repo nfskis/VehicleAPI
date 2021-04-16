@@ -47,9 +47,10 @@ namespace VehicleAPI.Controllers
         [HttpGet]
         [Route("api/vehicle")]
         [Authorize(Roles = "Admin")]
-        public List<VehicleModel> Get()
+        public List<VehicleModel> Get(int pageNumber)
         {
-            return VehicleProcessor.GetAllVehicles();
+            int rowsOfPage = 10;
+            return VehicleProcessor.GetAllVehicles(pageNumber, rowsOfPage);
         }
 
         [HttpPut]

@@ -53,9 +53,9 @@ namespace VehicleAPI.BusinessLogic
         /// return Vehicle models
         /// </summary>
         /// <returns></returns>
-        public List<VehicleModel> GetAllVehicles()
+        public List<VehicleModel> GetAllVehicles(int pageNumber, int rowsOfPage)
         {
-            return SqlDataAccess.LoadData<VehicleModel>("dbo.Vehicle_GetAllVehicles");
+            return SqlDataAccess.LoadData<VehicleModel, dynamic>("dbo.Vehicle_GetPage", new { pageNumber, rowsOfPage });
         }
 
         /// <summary>
