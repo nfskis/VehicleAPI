@@ -32,7 +32,7 @@ namespace VehicleAPI.Controllers
         /// Register Vehicle
         /// </summary>
         /// <param name="value">VehicleModel</param>
-        [Route("api/Vehicle/SetDefault/")]
+        [Route("api/Demo/setDefault")]
         [HttpPost]
         public void SetDefaultRoles()
         {
@@ -43,7 +43,7 @@ namespace VehicleAPI.Controllers
         /// Register Vehicle
         /// </summary>
         /// <param name="value">VehicleModel</param>
-        [Route("api/Vehicle/TrackRecord/")]
+        [Route("api/Demo/trackRecordevery30sec")]
         [HttpPost]
         public async void recordTrack()
         {

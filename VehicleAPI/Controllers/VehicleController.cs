@@ -28,20 +28,48 @@ namespace VehicleAPI.Controllers
         /// </summary>
         /// <param name="value">VehicleModel</param>
         [HttpPost]
-        [Route("api/Vehicle/register/")]
+        [Route("api/Vehicle")]
         [Authorize(Roles = "User, Admin")]
-        public ApiResultMessage RegisterVehicle([FromForm] RegisterVehicleViewModel value)
+        public ActionResult RegisterVehicle([FromForm] RegisterVehicleViewModel value)
         {
             try
             {
                 value.UserSeqID = User.Claims.First().Value;
                 VehicleProcessor.RegisterVehicle(value);
-                return new ApiResultMessage("Resister Vehicle has been sucessful", "Success");
+                return Ok("Resister Vehicle has been sucessful");
             }
             catch (Exception)
             {
-                return new ApiResultMessage("Resister Vehicle has been Failed", "Failed");
+                return BadRequest("Resister Vehicle has been Failed");
             }
+        }
+
+        /// <summary>
+        /// get all vehicles
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("api/vehicle")]
+        [Authorize(Roles = "Admin")]
+        public List<VehicleModel> Get()
+        {
+            return VehicleProcessor.GetAllVehicles();
+        }
+
+        [HttpPut]
+        [Route("api/vehicle")]
+        [Authorize(Roles = "Admin")]
+        public void UpdateVehicle()
+        {
+            ///*return */VehicleProcessor.GetAllVehicles();
+        }
+
+        [HttpDelete]
+        [Route("api/vehicle")]
+        [Authorize(Roles = "Admin")]
+        public void DeleteVehicle()
+        {
+            //return VehicleProcessor.GetAllVehicles();
         }
 
         /// <summary>
@@ -49,25 +77,12 @@ namespace VehicleAPI.Controllers
         /// </summary>
         /// <param name="value"></param>
         [HttpGet]
-        [Route("api/vehicle/search/")]
+        [Route("api/vehicle/search")]
         [Authorize(Roles = "Admin")]
         public VehicleModel SearchbyPlateNumber([FromHeader] string PlateNumber)
         {
             return VehicleProcessor.FindVehicleByPlateNumber(PlateNumber);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        [HttpGet]
-        [Route("api/vehicle/all/")]
-        [Authorize(Roles = "Admin")]
-        public List<VehicleModel> all()
-        {
-            return VehicleProcessor.GetAllVehicles();
-        }
-
 
     }
 }

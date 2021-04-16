@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using VehicleAPI.DBHelpers;
 using VehicleAPI.Models;
 using VehicleAPI.ViewModels;
+using VehicleAPI.ViewModels.Users;
 
 namespace VehicleAPI.BusinessLogic
 {
@@ -17,19 +19,29 @@ namespace VehicleAPI.BusinessLogic
             SqlDataAccess = new SqlDataAccess(config);
         }
 
+
+        /// <summary>
+        /// encoding password 
+        /// </summary>
+        /// <param name="password">password</param>
+        /// <returns></returns>
+        private string EncodingPassword(string password)
+        {
+            var sha = new System.Security.Cryptography.HMACSHA512
+            {
+                Key = Encoding.UTF8.GetBytes(password.Length.ToString())
+            };
+            var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(hash);
+        }
+
         /// <summary>
         /// Register User
         /// </summary>
         /// <param name="value">User model</param>
         /// <returns>applied row count</returns>
-        public int RegisterUser(UserViewModel value)
+        public int RegisterUser(ResisterUserViewModel value)
         {
-            var user = new LoginUserViewModel(value.Email, value.Password);
-            bool isExisted = LoginUser(user) != null ? true : false;
-            if (isExisted)
-            {
-                throw new Exception($"the givens user eamil existed in DataBase: '{value.Email}'");
-            }
 
             return SqlDataAccess.SaveData<UserModel, dynamic>("dbo.Account_RegisterUser",
                                                                 new
@@ -38,8 +50,8 @@ namespace VehicleAPI.BusinessLogic
                                                                     FirstName = value.FirstName,
                                                                     LastName = value.LastName,
                                                                     Email = value.Email,
-                                                                    Password = user.Password,
-                                                                    RoleID = value.RoleID,
+                                                                    Password = EncodingPassword(value.Password),
+                                                                    RoleID = 0, // default set as an user
                                                                 });
         }
 
@@ -47,18 +59,25 @@ namespace VehicleAPI.BusinessLogic
         /// Update user
         /// </summary>
         /// <param name="value">User view model</param>
-        public void UpdateUser(UpdateUserViewModel value)
+        public void UpdateUser(string email, UpdateUserViewModel value)
         {
-            SqlDataAccess.LoadSingleData<UpdateUserViewModel, dynamic>("dbo.Account_UpdateUser", value);
+            SqlDataAccess.SingleOrDefault<dynamic>("dbo.Account_UpdateUser",
+                                                    new
+                                                    {
+                                                        FirstName = value.FirstName,
+                                                        LastName = value.LastName,
+                                                        Email = email,
+                                                        Password = EncodingPassword(value.Password)
+                                                    });
         }
 
         /// <summary>
         /// Delete User
         /// </summary>
         /// <param name="userId">User ID</param>
-        public void DeleteUser(string userSeqID)
+        public void DeleteUser(string email)
         {
-            SqlDataAccess.LoadSingleData<UserViewModel, dynamic>("dbo.Account_DeleteUser", new { userSeqID });
+            SqlDataAccess.SingleOrDefault<dynamic>("dbo.Account_DeleteUser", new { email });
         }
 
         /// <summary>
@@ -80,9 +99,9 @@ namespace VehicleAPI.BusinessLogic
         /// Get all users
         /// </summary>
         /// <returns></returns>
-        internal List<UserViewModel> GetUsers()
+        internal List<GetUsersViewModel> GetUsers()
         {
-            return SqlDataAccess.LoadData<UserViewModel, dynamic>("dbo.Account_GetUsers", new { });
+            return SqlDataAccess.LoadData<GetUsersViewModel, dynamic>("dbo.Account_GetUsers", new { });
         }
     }
 }

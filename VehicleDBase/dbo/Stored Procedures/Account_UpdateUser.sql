@@ -2,8 +2,7 @@
 		@FirstName			 NVARCHAR (50) ,
 		@LastName				 NVARCHAR (50) ,
 		@Email					 NVARCHAR (256),
-		@Password				 NVARCHAR (128),
-		@RoleID					 tinyint
+		@Password				 NVARCHAR (128)
 AS
 BEGIN
 
@@ -17,9 +16,7 @@ BEGIN
 		SET 
 				FirstName = @FirstName,
 				LastName = @LastName,
-				Email		= @Email,
 				Password = @Password,
-				RoleID = @RoleID,
 				LastModifiedDate = GETDATE()
 		WHERE 
 				UserSeqID = @UserSeqID

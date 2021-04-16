@@ -76,6 +76,11 @@
     <Build Include="dbo\Stored Procedures\Vehicle_RegisterVehicle.sql" />
     <Build Include="dbo\Stored Procedures\Vehicle_FindVehicleByPlateNumber.sql" />
     <Build Include="dbo\Stored Procedures\Vehicle_GetAllVehicles.sql" />
+    <Build Include="dbo\Stored Procedures\Account_UpdateUser.sql" />
+    <Build Include="dbo\Stored Procedures\Account_DeleteUser.sql" />
+    <Build Include="dbo\Stored Procedures\Account_GetUsers.sql" />
+    <Build Include="dbo\Stored Procedures\Track_GetAllTracks.sql" />
+    <Build Include="dbo\Stored Procedures\Track_Delete.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="VehicleDBase.refactorlog" />

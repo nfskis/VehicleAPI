@@ -12,11 +12,11 @@ using System.Web;
 using VehicleAPI.BusinessLogic;
 using VehicleAPI.Models;
 using VehicleAPI.ViewModels;
+using VehicleAPI.ViewModels.Users;
 
 namespace VehicleAPI.Controllers
 {
     [ApiController]
-    [Authorize]
     public class AccountController : Controller
     {
         private readonly AccountProcessor AccountProcessor;
@@ -27,76 +27,83 @@ namespace VehicleAPI.Controllers
         }
 
         /// <summary>
-        /// Register Track of Vehicle 
+        /// register user
         /// </summary>
-        /// <param name="value">Vehicle Tracking Model</param>
-        /// <param name="vehicleID">Vehicle ID</param>
+        /// <param name="value">user model</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/account/user/")]
-        public ApiResultMessage RegisterUser([FromForm] UserViewModel value)
+        [Route("api/user/")]
+        public ActionResult RegisterUser([FromForm] ResisterUserViewModel value)
         {
+            var user = new LoginUserViewModel(value.Email, value.Password);
+            bool isExisted = AccountProcessor.LoginUser(user) != null 
+                ? true 
+                : false;
+
+            if (isExisted)
+            {
+                return BadRequest($"the givens user eamil existed in user database: '{value.Email}'");
+            }
+
             AccountProcessor.RegisterUser(value);
-            return new ApiResultMessage("Regiser user successful", "Success");
+            return Ok($"Regiser user successful: {value.Email}");
         }
 
         /// <summary>
-        /// Register Track of Vehicle 
+        /// update user 
         /// </summary>
-        /// <param name="value">Vehicle Tracking Model</param>
-        /// <param name="vehicleID">Vehicle ID</param>
+        /// <param name="value">user view Model</param>
         [HttpPut]
-        [Route("api/account/user")]
-        public ApiResultMessage UpdateUser([FromForm] UpdateUserViewModel value)
+        [Route("api/user")]
+        [Authorize]
+        public ActionResult UpdateUser([FromForm] UpdateUserViewModel value)
         {
-            AccountProcessor.UpdateUser(value);
-            return new ApiResultMessage("Regiser user successful", "Success");
+            AccountProcessor.UpdateUser(User.Claims.ElementAt(1).Value, value);
+            return Ok($"Updated user : {User.Identity.Name}");
         }
 
         /// <summary>
-        /// Register Track of Vehicle 
+        /// delete user
         /// </summary>
-        /// <param name="value">Vehicle Tracking Model</param>
-        /// <param name="vehicleID">Vehicle ID</param>
+        /// <param name="userEmail">user email address</param>
+        /// <returns></returns>
         [HttpDelete]
-        [Route("api/account/user")]
+        [Route("api/user")]
         [Authorize(Roles = "Admin")]
-        public ApiResultMessage DeleteUser(string userEmail)
+        public ActionResult DeleteUser([FromForm] DeleteUserViewModel deleteUser)
         {
-            var userId = AccountProcessor.GetUsers()
-                    .FirstOrDefault(curr => curr.Email == userEmail)?.UserSeqID;
-            AccountProcessor.DeleteUser(userId);
-            return new ApiResultMessage("Regiser user successful", "Success");
+            AccountProcessor.DeleteUser(deleteUser.Email);
+            return Ok($"Deleted user: {deleteUser.Email}");
         }
 
         /// <summary>
-        /// Register Track of Vehicle 
+        /// get all users
         /// </summary>
-        /// <param name="value">Vehicle Tracking Model</param>
-        /// <param name="vehicleID">Vehicle ID</param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/account/user")]
+        [Route("api/user")]
         [Authorize(Roles = "Admin")]
-        public List<UserViewModel> GetUser()
+        public List<GetUsersViewModel> GetUser()
         {
             return AccountProcessor.GetUsers();
         }
 
         /// <summary>
-        /// Register Track of Vehicle 
+        /// user login 
         /// </summary>
-        /// <param name="value">Vehicle Tracking Model</param>
-        /// <param name="vehicleID">Vehicle ID</param>
+        /// <param name="value">Login User View Model</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/account/login/")]
-        public async Task<ApiResultMessage> UserLoginAsync([FromForm] LoginUserViewModel value)
+        [Route("api/user/login")]
+        public async Task<ActionResult> UserLoginAsync([FromForm] LoginUserViewModel value)
         {
             var loginUser = AccountProcessor.LoginUser(value);
             if (loginUser == null)
             {
                 // redirection to login page
-                return new ApiResultMessage("User doen't existed in our database", "Failed");
+                return NotFound($"User doen't existe in our database: {value.Email}");
             }
 
             try
@@ -119,25 +126,26 @@ namespace VehicleAPI.Controllers
                         AllowRefresh = true
                     });
 
-                return new ApiResultMessage($@"Successful login user:{loginUser.FirstName}", "Successful");
+                return Ok($"Successful login user: {loginUser.Email}");
             }
             catch (Exception ex)
             {
                 // login failed or redirection to error page
-                return new ApiResultMessage($@"{ex.Message}", "Failed");
+                return NotFound($@"{ex.Message}");
             }
         }
 
         /// <summary>
-        /// User Logout
+        /// user log out 
         /// </summary>
-        /// <param name="value"></param>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/account/logOut/")]
-        public async Task<ApiResultMessage> UesrLogOutAsync()
+        [Route("api/user/logout")]
+        [Authorize]
+        public async Task<ActionResult> UesrLogOutAsync()
         {
             await HttpContext.SignOutAsync();
-            return new ApiResultMessage($@"Logout Successful: {User.Identity.Name}", "Success");
+            return Ok($@"Logout Successful: {User.Identity.Name}");
         }
 
 

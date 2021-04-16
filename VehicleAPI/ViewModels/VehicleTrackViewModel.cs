@@ -41,18 +41,17 @@ namespace VehicleAPI.ViewModels
                             }
                         }
                     }
+
+                    var geoCodingModel = JsonSerializer.Deserialize<GeoCodingModel>(result);
+                    if (geoCodingModel.status == "OK" && geoCodingModel.results.Any())
+                    {
+                        return geoCodingModel.results.First().formatted_address;
+                    }
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
-
-                var geoCodingModel = JsonSerializer.Deserialize<GeoCodingModel>(result);
-                if(geoCodingModel.status == "OK" && geoCodingModel.results.Any())
-                {
-                    return geoCodingModel.results.First().formatted_address;
-                }
-
                 return "NOT FOUND ADDRESS";
             }
         }

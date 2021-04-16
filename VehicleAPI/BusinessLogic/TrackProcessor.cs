@@ -50,6 +50,15 @@ namespace VehicleAPI.BusinessLogic
         }
 
         /// <summary>
+        /// get all tracks
+        /// </summary>
+        /// <returns></returns>
+        internal List<VehicleTrackViewModel> GetTracks()
+        {
+            return SqlDataAccess.LoadData<VehicleTrackViewModel, dynamic>("dbo.Track_GetAllTracks", new { });
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="track"></param>
@@ -57,6 +66,15 @@ namespace VehicleAPI.BusinessLogic
         public bool IsUserVehicle(string userID, string VehicleID)
         {
             return VehicleProcessor.FindVehicleByVehicleID(VehicleID).UserSeqID == userID;
+        }
+
+        /// <summary>
+        /// delete track
+        /// </summary>
+        /// <param name="trackSeqID"></param>
+        internal void DeleteTrack(string trackSeqID)
+        {
+            SqlDataAccess.SingleOrDefault<dynamic>("dbo.track_delete", new { trackSeqID });
         }
 
         /// <summary>

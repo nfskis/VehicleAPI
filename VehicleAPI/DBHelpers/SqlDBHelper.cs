@@ -92,6 +92,19 @@ namespace VehicleAPI.DBHelpers
         }
 
         /// <summary>
+        /// execute single stored procedure
+        /// </summary>
+        /// <param name="sqlQuery"></param>
+        public void SingleOrDefault<T>(string storedProcesdure, T parameters)
+        {
+            using (IDbConnection connection = new SqlConnection(GetConnectionString()))
+            {
+                connection.QueryFirstOrDefault<T>(storedProcesdure, parameters,
+                    commandType: CommandType.StoredProcedure);
+            }
+        }
+
+        /// <summary>
         /// return sinlgle item in the database.
         /// </summary>
         /// <typeparam name="T">type of data model</typeparam>

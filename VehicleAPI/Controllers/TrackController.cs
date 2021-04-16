@@ -31,8 +31,8 @@ namespace VehicleAPI.Controllers
         /// <param name="value">Vehicle Tracking Model</param>
         /// <param name="vehicleID">Vehicle ID</param>
         [HttpPost]
-        [Route("api/track/register/")]
-        public async Task<ApiResultMessage> RegisterTrackAsync([FromForm] RegisterTrackViewModel value)
+        [Route("api/track")]
+        public async Task<ActionResult> RegisterTrackAsync([FromForm] RegisterTrackViewModel value)
         {
             // current user allows to add tracking record.
             // doens't allows to add tracking record for other vehicle.
@@ -44,10 +44,34 @@ namespace VehicleAPI.Controllers
             }
             else
             {
-                return new ApiResultMessage("Login user is not Admin or vehicle user.", "Failed");
+                return BadRequest("Logined user is not Admin or vehicle user.");
             }
 
-            return new ApiResultMessage("Track data has been registed", "Success");
+            return Ok("Track data has been registed");
+        }
+
+        [HttpGet]
+        [Route("api/track")]
+        [Authorize(Roles = "Admin")]
+        public List<VehicleTrackViewModel> GetTrack()
+        {
+            return TrackProcessor.GetTracks();
+        }
+
+        [HttpPut]
+        [Route("api/track")]
+        [Authorize(Roles = "Admin")]
+        public int PutTrack([FromForm] TrackModel trackModel)
+        {
+            return TrackProcessor.UpdateTrack(trackModel);
+        }
+
+        [HttpDelete]
+        [Route("api/track")]
+        [Authorize(Roles = "Admin")]
+        public void DeleteTrack(string trackSeqID)
+        {
+            TrackProcessor.DeleteTrack(trackSeqID);
         }
 
         /// <summary>

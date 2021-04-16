@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace VehicleAPI.ViewModels
+namespace VehicleAPI.ViewModels.Users
 {
-    public class UserViewModel
+    public class GetUsersViewModel
     {
         public string UserSeqID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
-        public int RoleID { get; set; } = 0; // user 
     }
-
 }
