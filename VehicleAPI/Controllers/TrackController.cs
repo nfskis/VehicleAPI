@@ -54,9 +54,10 @@ namespace VehicleAPI.Controllers
         [HttpGet]
         [Route("api/track")]
         [Authorize(Roles = "Admin")]
-        public List<VehicleTrackViewModel> GetTrack()
+        public List<VehicleTrackViewModel> GetTrack(int pageNumber)
         {
-            return TrackProcessor.GetTracks();
+            int rowsOfPage = 10;
+            return TrackProcessor.GetTracks(pageNumber, rowsOfPage);
         }
 
         [HttpPut]

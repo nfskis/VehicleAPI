@@ -54,9 +54,9 @@ namespace VehicleAPI.BusinessLogic
         /// get all tracks
         /// </summary>
         /// <returns></returns>
-        internal List<VehicleTrackViewModel> GetTracks()
+        internal List<VehicleTrackViewModel> GetTracks(int pageNumber, int rowsOfPage)
         {
-            return SqlDataAccess.LoadData<VehicleTrackViewModel>("dbo.Track_GetAllTracks");
+            return SqlDataAccess.LoadData<VehicleTrackViewModel, dynamic>("dbo.Track_GetPage", new { pageNumber, rowsOfPage });
         }
 
         /// <summary>
