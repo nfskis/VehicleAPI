@@ -5,5 +5,6 @@
     [Latitude] FLOAT NOT NULL, 
     [Longitude] FLOAT NOT NULL, 
     [CreatedDate] DATETIME NOT NULL DEFAULT Getdate(), 
+    [LastModifiedDate] DATETIME NOT NULL DEFAULT Getdate(), 
     PRIMARY KEY ([TrackSeqID]), 
 )

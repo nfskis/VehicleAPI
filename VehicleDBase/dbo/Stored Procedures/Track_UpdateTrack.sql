@@ -1,12 +1,13 @@
 ﻿CREATE PROCEDURE [dbo].[Track_UpdateTrack]
 	@TrackSeqID NVARCHAR(128),	
 	@Latitude float,
-	@Longitude float,
-	@CreatedDate DateTime
+	@Longitude float
 AS
+BEGIN
 		UPDATE Tracks
 		SET Latitude = @Latitude, 
 				Longitude = @Longitude, 
-				CreatedDate = @CreatedDate
-		WHERE TrackSeqID = @TrackSeqID
-RETURN 0
+				LastModifiedDate = GETDATE()
+		WHERE 
+				TrackSeqID = @TrackSeqID
+END

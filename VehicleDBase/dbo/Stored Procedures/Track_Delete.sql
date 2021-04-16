@@ -3,6 +3,6 @@
 	
 AS
 BEGIN
-		DELETE Users
+		DELETE Tracks
 		WHERE @TrackSeqID = @TrackSeqID 
 END

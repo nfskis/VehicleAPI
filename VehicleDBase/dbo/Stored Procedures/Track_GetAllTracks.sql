@@ -3,10 +3,13 @@ AS
 BEGIN
 		SELECT 
 				TrackSeqID
-				, VehicleSeqID
+				, Vehicles.VehicleSeqID AS VehicleSeqID
+				, Vehicles.PlateNumber AS PlateNumber
 				, Latitude
 				, Longitude
-				, CreatedDate
 		FROM 
-				Tracks
+				Tracks, Vehicles
+		WHERE 
+				Tracks.VehicleSeqID = Vehicles.VehicleSeqID
+
 END

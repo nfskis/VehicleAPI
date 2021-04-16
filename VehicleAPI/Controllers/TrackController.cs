@@ -62,17 +62,25 @@ namespace VehicleAPI.Controllers
         [HttpPut]
         [Route("api/track")]
         [Authorize(Roles = "Admin")]
-        public int PutTrack([FromForm] TrackModel trackModel)
+        public ActionResult PutTrack([FromForm] UpdateTrackViewModel trackModel)
         {
-            return TrackProcessor.UpdateTrack(trackModel);
+            var result = TrackProcessor.UpdateTrack(trackModel);
+            if (result >= 0)
+                return Ok($"Updated Track: {trackModel.TrackSeqID}");
+            else
+                return NotFound($"Failed Updated Track: {trackModel.TrackSeqID}");
         }
 
         [HttpDelete]
         [Route("api/track")]
         [Authorize(Roles = "Admin")]
-        public void DeleteTrack(string trackSeqID)
+        public ActionResult DeleteTrack(string trackSeqID)
         {
-            TrackProcessor.DeleteTrack(trackSeqID);
+            var result = TrackProcessor.DeleteTrack(trackSeqID);
+            if (result >= 0)
+                return Ok($"Deleted Track successful: {trackSeqID}");
+            else
+                return NotFound($"Failed delete Track: {trackSeqID}");
         }
 
         /// <summary>
@@ -83,7 +91,7 @@ namespace VehicleAPI.Controllers
         /// <param name="endTime">2014-04-14 00:00:00.000 or 2021-04-13 T00:00:00.000</param>
         /// <returns>JSON</returns>
         [HttpGet]
-        [Route("api/track/range/")]
+        [Route("api/track/range")]
         [Authorize(Roles = "Admin")]
         public List<VehicleTrackViewModel> TrackRange([FromHeader] string VehicleSeqID, DateTime startTime, DateTime endTime)
         {
@@ -99,7 +107,7 @@ namespace VehicleAPI.Controllers
         /// <param name="id">Vehicle Seq ID</param>
         /// <returns>JSON</returns>
         [HttpGet]
-        [Route("api/track/current/")]
+        [Route("api/track/current")]
         [Authorize(Roles = "Admin")]
         public VehicleTrackViewModel GetCurrentLocationOfVehicle([FromHeader] string VehicleSeqID)
         {

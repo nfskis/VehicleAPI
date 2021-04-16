@@ -82,7 +82,7 @@ namespace VehicleAPI.Controllers
         /// </summary>
         /// <param name="value"></param>
         [HttpGet]
-        [Route("api/vehicle/search")]
+        [Route("api/vehicle/plateNumber")]
         [Authorize(Roles = "Admin")]
         public VehicleModel SearchbyPlateNumber([FromHeader] string plateNumber)
         {

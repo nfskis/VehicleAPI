@@ -45,9 +45,9 @@ namespace VehicleAPI.BusinessLogic
         /// </summary>
         /// <param name="track">track model item</param>
         /// <returns></returns>
-        public int UpdateTrack(TrackModel track)
+        public int UpdateTrack(UpdateTrackViewModel track)
         {
-            return SqlDataAccess.SaveData<TrackModel, dynamic>("dbo.Track_UpdateTrack", new { track.TrackSeqID, track.Latitude, track.Longitude, track.CreatedDate });
+            return SqlDataAccess.StoredProcesdure("dbo.Track_UpdateTrack", track);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace VehicleAPI.BusinessLogic
         /// <returns></returns>
         internal List<VehicleTrackViewModel> GetTracks()
         {
-            return SqlDataAccess.LoadData<VehicleTrackViewModel, dynamic>("dbo.Track_GetAllTracks", new { });
+            return SqlDataAccess.LoadData<VehicleTrackViewModel>("dbo.Track_GetAllTracks");
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace VehicleAPI.BusinessLogic
         /// delete track
         /// </summary>
         /// <param name="trackSeqID"></param>
-        internal void DeleteTrack(string trackSeqID)
+        internal int DeleteTrack(string trackSeqID)
         {
-            SqlDataAccess.SingleOrDefault<dynamic>("dbo.track_delete", new { trackSeqID });
+            return SqlDataAccess.SaveData("dbo.track_delete", new { trackSeqID });
         }
 
         /// <summary>
@@ -102,13 +102,11 @@ namespace VehicleAPI.BusinessLogic
                 {
                     // Vehicle stpped at somewhere in 30sec. so, It waste keep recored location. 
                     // So, update current record renewal for time 
-                    return UpdateTrack(new TrackModel()
+                    return UpdateTrack(new UpdateTrackViewModel()
                     {
                         TrackSeqID = current.TrackSeqID,
-                        VehicleSeqID = value.VehicleSeqID,
                         Latitude = current.Latitude,
                         Longitude = current.Longitude,
-                        CreatedDate = DateTime.Now
                     }); //return -1;
                 }
             }
