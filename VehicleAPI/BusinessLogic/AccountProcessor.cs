@@ -99,9 +99,9 @@ namespace VehicleAPI.BusinessLogic
         /// Get all users
         /// </summary>
         /// <returns></returns>
-        internal List<GetUsersViewModel> GetUsers()
+        internal List<GetUsersViewModel> GetUsers(int pageNumber, int rowsOfPage)
         {
-            return SqlDataAccess.LoadData<GetUsersViewModel, dynamic>("dbo.Account_GetUsers", new { });
+            return SqlDataAccess.LoadData<GetUsersViewModel, dynamic>("dbo.Account_GetUsers", new { pageNumber, rowsOfPage });
         }
     }
 }

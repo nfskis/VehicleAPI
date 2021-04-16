@@ -84,9 +84,10 @@ namespace VehicleAPI.Controllers
         [HttpGet]
         [Route("api/user")]
         [Authorize(Roles = "Admin")]
-        public List<GetUsersViewModel> GetUser()
+        public List<GetUsersViewModel> GetUser(int pageNumber)
         {
-            return AccountProcessor.GetUsers();
+            int rowsOfPage = 10;
+            return AccountProcessor.GetUsers(pageNumber, rowsOfPage);
         }
 
         /// <summary>
